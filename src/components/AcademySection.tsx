@@ -32,7 +32,13 @@ export const AcademySection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#1C1A17] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#C59B6D] uppercase">
             <GraduationCap className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>Final Touch Cosmetology & Hair Academy</span>
@@ -65,16 +71,20 @@ export const AcademySection: React.FC = () => {
               <span className="text-[10px] sm:text-[11px] text-[#A39B90] uppercase font-mono">Students/Batch</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* 3 Course Showcase Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
-          {ACADEMY_COURSES.map((course) => {
+          {ACADEMY_COURSES.map((course, idx) => {
             const isSelected = selectedCourse.id === course.id;
             return (
               <motion.div
                 key={course.id}
                 onClick={() => setSelectedCourse(course)}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.55, delay: idx * 0.12 }}
                 whileHover={{ y: -4 }}
                 className={`rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col justify-between transition-all duration-300 relative border cursor-pointer ${
                   isSelected
@@ -147,7 +157,13 @@ export const AcademySection: React.FC = () => {
         </div>
 
         {/* Academy In-Studio Experience Banner */}
-        <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1C1A17] via-[#2A2622] to-[#1C1A17] p-5 sm:p-8 md:p-12 border border-[#C59B6D]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6 }}
+          className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1C1A17] via-[#2A2622] to-[#1C1A17] p-5 sm:p-8 md:p-12 border border-[#C59B6D]/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8"
+        >
           <div className="space-y-2 sm:space-y-3 max-w-xl">
             <div className="inline-flex items-center gap-2 text-xs font-mono text-[#C59B6D] uppercase">
               <Briefcase className="w-4 h-4 shrink-0" />
@@ -181,7 +197,7 @@ export const AcademySection: React.FC = () => {
               <span>Call: 099271 26000</span>
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

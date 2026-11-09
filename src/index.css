@@ -19,11 +19,11 @@ html {
   scroll-behavior: smooth;
   font-family: var(--font-sans);
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
 }
 
 body {
-  overflow-x: hidden;
+  /* Use overflow-x: clip so IntersectionObserver & Framer Motion whileInView work perfectly */
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -76,4 +76,14 @@ body {
 
 .gold-border-glow {
   box-shadow: 0 0 25px -5px rgba(197, 155, 109, 0.25);
+}
+
+/* Smooth keyframe shimmer */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
 }

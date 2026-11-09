@@ -15,20 +15,20 @@ export const FloatingCartBar: React.FC<FloatingCartBarProps> = ({
   onClearServices,
 }) => {
   const count = selectedServices.length;
-  if (count === 0) return null;
-
   const totalAmount = selectedServices.reduce((acc, curr) => acc + curr.price, 0);
   const totalDuration = selectedServices.reduce((acc, curr) => acc + curr.durationMinutes, 0);
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ y: 80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 80, opacity: 0 }}
-        transition={{ type: 'spring', stiffness: 280, damping: 28 }}
-        className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-40"
-      >
+      {count > 0 && (
+        <motion.div
+          key="floating-cart-bar"
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 80, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+          className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-40"
+        >
         <div className="rounded-2xl bg-[#11100F]/95 backdrop-blur-xl border border-[#C59B6D] p-3 sm:p-4 text-[#FAF7F2] shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
           <div className="flex items-center justify-between gap-3">
             {/* Left Info */}
@@ -72,6 +72,7 @@ export const FloatingCartBar: React.FC<FloatingCartBarProps> = ({
           </div>
         </div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };

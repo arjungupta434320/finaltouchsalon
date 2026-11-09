@@ -71,7 +71,13 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-14"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#F2ECE1] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#B08455] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>Curated Haute Coiffure & Aesthetic Menu</span>
@@ -84,10 +90,16 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
           <p className="text-xs sm:text-base text-[#6E675F] max-w-xl mx-auto font-light leading-relaxed">
             Every session begins with an individualized diagnostic consultation. Transparent Indian Rupee pricing with zero surprise charges.
           </p>
-        </div>
+        </motion.div>
 
         {/* Filter Bar & Search */}
-        <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="space-y-4 sm:space-y-6 mb-8 sm:mb-12"
+        >
           {/* Search Box */}
           <div className="max-w-md mx-auto relative px-1">
             <label htmlFor="service-search" className="sr-only">
@@ -141,7 +153,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
               })}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Results Counter & Selected info */}
         <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 text-xs text-[#6E675F] mb-6 px-1">
@@ -163,7 +175,7 @@ export const ServiceCatalog: React.FC<ServiceCatalogProps> = ({
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
+          viewport={{ once: true, amount: 0.05 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           {filteredServices.map((service) => {

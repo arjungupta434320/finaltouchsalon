@@ -152,7 +152,13 @@ export const BookingStudio: React.FC<BookingStudioProps> = ({
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-2xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#F2ECE1] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#B08455] uppercase">
             <Crown className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>Interactive 4-Step Reservation Engine</span>
@@ -165,10 +171,16 @@ export const BookingStudio: React.FC<BookingStudioProps> = ({
           <p className="text-xs sm:text-base text-[#6E675F] font-light leading-relaxed">
             Select your preferred treatment, specialist tier, and appointment slot. Instant VIP confirmation via WhatsApp Concierge.
           </p>
-        </div>
+        </motion.div>
 
         {/* Step Progress Stepper */}
-        <div className="mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8 sm:mb-12"
+        >
           <div className="flex items-center justify-between max-w-xl mx-auto relative px-2">
             <div className="absolute top-1/2 left-6 right-6 -translate-y-1/2 h-0.5 bg-[#F2ECE1] -z-0">
               <div
@@ -216,7 +228,7 @@ export const BookingStudio: React.FC<BookingStudioProps> = ({
               Step {currentStep} of 4: {stepTitles[currentStep - 1]}
             </span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Studio Card Container */}
         <div className="bg-[#F2ECE1] rounded-2xl sm:rounded-3xl border border-[#C59B6D]/30 shadow-xl overflow-hidden p-4 sm:p-8 md:p-10">

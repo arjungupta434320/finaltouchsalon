@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   MapPin,
   Clock,
@@ -10,6 +11,7 @@ import {
   Copy,
   Check,
   Award,
+  ExternalLink,
 } from 'lucide-react';
 import { SALON_DATA } from '../data/salonData';
 
@@ -41,8 +43,14 @@ export const LocationFooter: React.FC = () => {
       <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#C59B6D]/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-16">
+        {/* Section Header with smooth entrance */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-10 sm:mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#1C1A17] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#C59B6D] uppercase">
             <MapPin className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>Studio Flagship & Academy Campus</span>
@@ -55,12 +63,18 @@ export const LocationFooter: React.FC = () => {
           <p className="text-xs sm:text-base text-[#A39B90] max-w-xl mx-auto font-light leading-relaxed">
             Conveniently situated near Pant Vihar Gate on ITC Road. Welcoming clients from Saharanpur, Deoband, Roorkee, and Delhi NCR.
           </p>
-        </div>
+        </motion.div>
 
         {/* 2-Column Main Information Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-start mb-12 sm:mb-16">
           {/* Column 1: Weekly Hours & Festive Disclaimer */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-6 space-y-5 sm:space-y-6"
+          >
             <div className="rounded-2xl sm:rounded-3xl bg-[#1C1A17] p-5 sm:p-8 border border-[#C59B6D]/25 shadow-xl space-y-5 sm:space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4">
                 <div className="flex items-center gap-2 sm:gap-2.5">
@@ -140,10 +154,16 @@ export const LocationFooter: React.FC = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Column 2: Exact Location, Directions, & Fast Contacts */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6">
+          {/* Column 2: Exact Location, Directions, & Interactive Map */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-6 space-y-5 sm:space-y-6"
+          >
             <div className="rounded-2xl sm:rounded-3xl bg-[#1C1A17] p-5 sm:p-8 border border-[#C59B6D]/25 shadow-xl space-y-5 sm:space-y-6">
               <div className="flex items-center justify-between border-b border-white/10 pb-3 sm:pb-4">
                 <div className="flex items-center gap-2 sm:gap-2.5">
@@ -237,21 +257,37 @@ export const LocationFooter: React.FC = () => {
               </div>
             </div>
 
-            {/* Official Hours Google Maps Screenshot Proof */}
-            <div className="p-3.5 sm:p-4 rounded-2xl bg-[#1C1A17] border border-white/10 space-y-2">
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#A39B90] block">
-                Google Business Profile Hours Verified Record:
-              </span>
-              <div className="rounded-xl overflow-hidden bg-white/5 border border-white/10 p-2 max-w-xs mx-auto">
-                <img
-                  src="/salon-images/Screenshot 2026-11-09 211849.png"
-                  alt="Final Touch Verified Operating Hours"
-                  className="w-full h-auto object-contain rounded"
+            {/* Interactive Google Map of the Salon Location */}
+            <div className="rounded-2xl sm:rounded-3xl overflow-hidden border border-[#C59B6D]/30 shadow-2xl bg-[#1C1A17]">
+              <div className="p-3 sm:p-3.5 border-b border-white/10 flex items-center justify-between bg-[#11100F]">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#C59B6D]" />
+                  <span className="font-mono text-xs text-[#FAF7F2] font-semibold">
+                    Studio Location Map
+                  </span>
+                </div>
+                <a
+                  href={SALON_DATA.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-mono text-[#C59B6D] hover:underline flex items-center gap-1"
+                >
+                  <span>Open Full Map</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+              <div className="relative h-[250px] sm:h-[300px] w-full">
+                <iframe
+                  title="Final Touch Unisex Salon Location Map"
+                  src="https://maps.google.com/maps?q=Final+Touch+Unisex+Salon+Hasanpur+Chungi+ITC+Rd+Saharanpur+Uttar+Pradesh+247001&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="w-full h-full border-0 filter contrast-[105%]"
                   loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Editorial Colophon & Copyright */}

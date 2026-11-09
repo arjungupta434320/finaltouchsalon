@@ -51,7 +51,13 @@ export const LookbookAndReviews: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* ================= SECTION PART 1: EDITORIAL LOOKBOOK ================= */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#F2ECE1] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#B08455] uppercase">
             <Camera className="w-3.5 h-3.5 text-[#C59B6D]" />
             <span>High-Fashion Lookbook & Portfolio</span>
@@ -86,17 +92,18 @@ export const LookbookAndReviews: React.FC = () => {
               })}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Masonry / Grid Lookbook */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-24">
           {filteredLookbook.map((look) => (
             <motion.div
               key={look.id}
-              layout
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -4 }}
               className="group relative rounded-2xl overflow-hidden bg-[#181615] border border-[#C59B6D]/30 shadow-lg aspect-[4/5]"
             >
               <img
@@ -121,7 +128,13 @@ export const LookbookAndReviews: React.FC = () => {
 
         {/* ================= SECTION PART 2: VERIFIED CLIENT REVIEWS ================= */}
         <div className="pt-10 sm:pt-14 border-t border-[#C59B6D]/20">
-          <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-8 sm:mb-12"
+          >
             <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1 rounded-full bg-[#F2ECE1] border border-[#C59B6D]/30 text-[10px] sm:text-xs font-mono tracking-widest text-[#B08455] uppercase">
               <ShieldCheck className="w-3.5 h-3.5 text-[#C59B6D]" />
               <span>100% Verified Google & Direct Testimonials</span>
@@ -134,10 +147,16 @@ export const LookbookAndReviews: React.FC = () => {
             <p className="text-xs sm:text-base text-[#6E675F] max-w-xl mx-auto font-light leading-relaxed">
               With 104+ verified five-star ratings, Final Touch has been the most trusted luxury salon & academy destination in Saharanpur since 2018.
             </p>
-          </div>
+          </motion.div>
 
           {/* Featured Testimonial Carousel */}
-          <div className="max-w-4xl mx-auto mb-10 sm:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-4xl mx-auto mb-10 sm:mb-16"
+          >
             <div className="relative rounded-2xl sm:rounded-3xl bg-[#F2ECE1] p-5 sm:p-8 md:p-12 border-2 border-[#C59B6D]/40 shadow-xl overflow-hidden">
               <Quote className="w-12 h-12 sm:w-16 sm:h-16 text-[#C59B6D]/15 absolute -top-1 -left-1 pointer-events-none" />
 
@@ -226,13 +245,18 @@ export const LookbookAndReviews: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Verified Google Review Grid Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {REVIEWS.slice(0, 6).map((rev) => (
-              <div
+            {REVIEWS.slice(0, 6).map((rev, idx) => (
+              <motion.div
                 key={rev.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                whileHover={{ y: -3 }}
                 className="p-4 sm:p-6 rounded-2xl bg-[#F2ECE1]/80 hover:bg-[#F2ECE1] border border-[#C59B6D]/20 hover:border-[#C59B6D]/50 transition-all shadow-sm flex flex-col justify-between"
               >
                 <div>
@@ -267,7 +291,7 @@ export const LookbookAndReviews: React.FC = () => {
                     </button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
