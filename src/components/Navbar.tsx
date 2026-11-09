@@ -1,0 +1,387 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Sparkles,
+  Phone,
+  Clock,
+  Menu,
+  X,
+  ChevronRight,
+  Award,
+  Calendar,
+  MessageSquare,
+  ShieldCheck,
+  Scissors,
+} from 'lucide-react';
+import { SALON_DATA } from '../data/salonData';
+
+interface NavbarProps {
+  onOpenBooking: () => void;
+  selectedCount?: number;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, selectedCount = 0 }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isOpenNow, setIsOpenNow] = useState<boolean>(true);
+  const [currentTimeStr, setCurrentTimeStr] = useState<string>('');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Prevent background scroll when mobile drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Live IST calculation
+  useEffect(() => {
+    const checkSalonStatus = () => {
+      try {
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = {
+          timeZone: 'Asia/Kolkata',
+          hour: 'numeric',
+          hour12: false,
+        };
+        const formatter = new Intl.DateTimeFormat([], options);
+        const parts = formatter.formatToParts(now);
+        const hour = parseInt(parts.find((p) => p.type === 'hour')?.value || '12', 10);
+
+        // Salon open: 9:00 (9) to 21:00 (21)
+        const open = hour >= 9 && hour < 21;
+        setIsOpenNow(open);
+
+        const timeString = now.toLocaleTimeString('en-US', {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        });
+        setCurrentTimeStr(timeString);
+      } catch {
+        const hr = new Date().getHours();
+        setIsOpenNow(hr >= 9 && hr < 21);
+      }
+    };
+
+    checkSalonStatus();
+    const interval = setInterval(checkSalonStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const navLinks = [
+    { name: 'Services', href: '#services', icon: Scissors },
+    { name: 'Booking Studio', href: '#booking', icon: Calendar },
+    { name: 'Academy', href: '#academy', icon: Award },
+    { name: 'Reviews & Proof', href: '#reviews', icon: ShieldCheck },
+    { name: 'Location & Hours', href: '#location', icon: Clock },
+  ];
+
+  return (
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'backdrop-blur-md bg-[#11100F]/95 border-b border-[#C59B6D]/20 py-2.5 sm:py-3 shadow-xl'
+            : 'bg-gradient-to-b from-[#11100F]/90 via-[#11100F]/60 to-transparent py-3 sm:py-5'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            {/* Brand Logo & Title */}
+            <a
+              href="#"
+              className="group flex items-center gap-2 sm:gap-3 shrink-0 select-none min-w-0"
+              aria-label="Final Touch Unisex Salon & Academy Home"
+            >
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-[#C59B6D]/40 bg-[#1C1A17] flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:border-[#C59B6D]">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#C59B6D]" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="font-serif text-sm sm:text-lg xl:text-xl font-bold tracking-wider text-[#FAF7F2] uppercase whitespace-nowrap">
+                    Final Touch
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] font-mono tracking-widest px-1.5 py-0.2 rounded bg-[#C59B6D]/15 text-[#C59B6D] border border-[#C59B6D]/30 uppercase hidden md:inline-block shrink-0">
+                    Saharanpur
+                  </span>
+                </div>
+                <p className="text-[9px] sm:text-[10px] tracking-widest text-[#A39B90] uppercase font-sans truncate">
+                  Unisex Salon & Academy
+                </p>
+              </div>
+            </a>
+
+            {/* Desktop Navigation Links — Only visible on xl screens (>= 1280px) to prevent overlap */}
+            <nav className="hidden xl:flex items-center gap-6 2xl:gap-8 shrink-0">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-xs uppercase tracking-widest text-[#A39B90] hover:text-[#C59B6D] transition-colors duration-200 font-medium relative group py-1 whitespace-nowrap"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#C59B6D] transition-all duration-300 group-hover:w-full" />
+                </a>
+              ))}
+            </nav>
+
+            {/* Right Header Actions & Mobile Drawer Toggle */}
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+              {/* Live IST Status indicator pill — Desktop / Tablet only with whitespace-nowrap */}
+              <div
+                className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono backdrop-blur-md whitespace-nowrap shrink-0"
+                style={{
+                  borderColor: isOpenNow ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)',
+                  backgroundColor: isOpenNow ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+                }}
+                title={`Saharanpur IST Time: ${currentTimeStr} • Operating Hours: 9:00 AM – 9:00 PM`}
+              >
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                      isOpenNow ? 'bg-emerald-400' : 'bg-amber-400'
+                    }`}
+                  />
+                  <span
+                    className={`relative inline-flex rounded-full h-2 w-2 ${
+                      isOpenNow ? 'bg-emerald-500' : 'bg-amber-500'
+                    }`}
+                  />
+                </span>
+                <span className={isOpenNow ? 'text-emerald-300' : 'text-amber-300'}>
+                  {isOpenNow ? 'Open Now • 9 AM–9 PM' : 'Closed • Opens 9 AM'}
+                </span>
+              </div>
+
+              {/* Compact Status Indicator for Mobile (< lg) */}
+              <div
+                className="flex lg:hidden items-center gap-1.5 px-2 py-1 rounded-full border text-[10px] font-mono shrink-0"
+                style={{
+                  borderColor: isOpenNow ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)',
+                  backgroundColor: isOpenNow ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+                }}
+                title={isOpenNow ? 'Open Now (9 AM – 9 PM)' : 'Closed (Opens 9 AM)'}
+              >
+                <span
+                  className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 ${
+                    isOpenNow ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+                  }`}
+                />
+                <span className={isOpenNow ? 'text-emerald-300' : 'text-amber-300'}>
+                  {isOpenNow ? 'Open' : 'Closed'}
+                </span>
+              </div>
+
+              {/* Direct Phone Dial (Desktop xl only) */}
+              <a
+                href={SALON_DATA.phoneTel}
+                className="hidden 2xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-[#FAF7F2] hover:text-[#C59B6D] border border-white/10 hover:border-[#C59B6D]/40 transition-all shrink-0 whitespace-nowrap"
+                title="Direct Desk Line"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#C59B6D]" />
+                <span>099271 26000</span>
+              </a>
+
+              {/* Quick-Book CTA — Responsive padding & text */}
+              <button
+                onClick={onOpenBooking}
+                className="relative group px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-[#C59B6D] to-[#B08455] text-[#11100F] font-bold text-[11px] sm:text-xs tracking-wider uppercase transition-all duration-200 hover:shadow-[0_0_20px_rgba(197,155,109,0.4)] active:scale-95 flex items-center gap-1.5 cursor-pointer shrink-0 min-h-[36px] sm:min-h-[40px]"
+                aria-label="Book appointment slot"
+              >
+                <span className="hidden xs:inline">Book</span>
+                <span className="hidden sm:inline">Appointment</span>
+                <span className="xs:hidden">Book</span>
+                {selectedCount > 0 ? (
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#11100F] text-[#FAF7F2] text-[9px] sm:text-[10px] flex items-center justify-center font-bold">
+                    {selectedCount}
+                  </span>
+                ) : (
+                  <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                )}
+              </button>
+
+              {/* Mobile / Tablet Menu Hamburger (Visible on all screens < xl) */}
+              <button
+                onClick={() => setMobileMenuOpen(true)}
+                className="xl:hidden p-2 rounded-xl text-[#FAF7F2] hover:text-[#C59B6D] bg-[#1C1A17] border border-white/10 hover:border-[#C59B6D]/40 transition-colors focus:outline-none cursor-pointer flex items-center justify-center min-w-[40px] min-h-[40px]"
+                aria-label="Open mobile navigation menu"
+                aria-expanded={mobileMenuOpen}
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Full-Screen Mobile Drawer Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 xl:hidden">
+            {/* Dimmed Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+
+            {/* Slide-in Sheet from Right */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute top-0 right-0 bottom-0 w-full max-w-sm bg-[#11100F] border-l border-[#C59B6D]/30 flex flex-col justify-between shadow-2xl overflow-y-auto"
+            >
+              {/* Drawer Header */}
+              <div className="p-5 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full border border-[#C59B6D]/40 bg-[#1C1A17] flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-[#C59B6D]" />
+                  </div>
+                  <div>
+                    <span className="font-serif text-base font-bold text-[#FAF7F2] uppercase block leading-none">
+                      Final Touch
+                    </span>
+                    <span className="text-[10px] text-[#A39B90] uppercase font-mono tracking-wider">
+                      Saharanpur Flagship
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2.5 rounded-full text-[#FAF7F2] hover:text-[#C59B6D] bg-[#1C1A17] border border-white/10 hover:border-[#C59B6D]/40 transition-all cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  aria-label="Close navigation drawer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Drawer Body */}
+              <div className="p-5 space-y-6 flex-1 overflow-y-auto">
+                {/* Live IST Status Card */}
+                <div
+                  className="p-3.5 rounded-2xl border text-xs font-mono space-y-1"
+                  style={{
+                    borderColor: isOpenNow ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)',
+                    backgroundColor: isOpenNow ? 'rgba(16, 185, 129, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`inline-block w-2.5 h-2.5 rounded-full ${
+                          isOpenNow ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+                        }`}
+                      />
+                      <span className={`font-bold ${isOpenNow ? 'text-emerald-300' : 'text-amber-300'}`}>
+                        {isOpenNow ? 'Open Now (9:00 AM – 9:00 PM)' : 'Closed (Opens at 9:00 AM)'}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#A39B90]">{currentTimeStr} IST</span>
+                  </div>
+                  <p className="text-[11px] text-[#A39B90] font-sans pt-1">
+                    Hasanpur Chungi Near Pant Vihar Gate, ITC Rd, Saharanpur
+                  </p>
+                </div>
+
+                {/* Navigation Links List */}
+                <nav className="space-y-1">
+                  {navLinks.map((link) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <a
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between p-3.5 rounded-xl text-sm font-medium text-[#FAF7F2] hover:text-[#C59B6D] hover:bg-[#1C1A17] transition-all group min-h-[48px]"
+                      >
+                        <div className="flex items-center gap-3">
+                          <IconComponent className="w-4 h-4 text-[#C59B6D] transition-transform group-hover:scale-110" />
+                          <span className="tracking-wide">{link.name}</span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-[#A39B90] transition-transform group-hover:translate-x-1" />
+                      </a>
+                    );
+                  })}
+                </nav>
+
+                {/* Primary Reservation CTA inside Menu */}
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenBooking();
+                    }}
+                    className="w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-[#C59B6D] to-[#B08455] text-[#11100F] font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 cursor-pointer min-h-[48px]"
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span>Reserve Studio Slot</span>
+                  </button>
+                </div>
+
+                {/* Fast Contact Actions */}
+                <div className="space-y-2 pt-2 border-t border-white/10">
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-[#C59B6D]">
+                    Direct Salon Concierge:
+                  </p>
+                  <a
+                    href={SALON_DATA.phoneTel}
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-[#1C1A17] text-xs font-mono text-[#FAF7F2] hover:text-[#C59B6D] border border-white/5 transition-colors min-h-[44px]"
+                  >
+                    <Phone className="w-4 h-4 text-[#C59B6D]" />
+                    <span>099271 26000 (Desk 1)</span>
+                  </a>
+                  <a
+                    href="tel:+917500702702"
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-[#1C1A17] text-xs font-mono text-[#FAF7F2] hover:text-[#C59B6D] border border-white/5 transition-colors min-h-[44px]"
+                  >
+                    <Phone className="w-4 h-4 text-[#C59B6D]" />
+                    <span>075007 02702 (Desk 2)</span>
+                  </a>
+                  <a
+                    href={SALON_DATA.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 p-3 rounded-xl bg-[#1C1A17] text-xs font-mono text-emerald-400 hover:text-emerald-300 border border-emerald-500/20 transition-colors min-h-[44px]"
+                  >
+                    <MessageSquare className="w-4 h-4 text-[#25D366]" />
+                    <span>WhatsApp Concierge Chat</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Drawer Footer Credentials */}
+              <div className="p-4 border-t border-white/10 bg-[#1C1A17]/60 text-[10px] text-[#A39B90] space-y-1">
+                <div className="flex items-center gap-2 text-[#C59B6D]">
+                  <Award className="w-3.5 h-3.5" />
+                  <span>Identifies as Women-Owned • LGBTQ+ Welcoming</span>
+                </div>
+                <p>Est. {SALON_DATA.established} in Saharanpur • 4.9★ (104+ Reviews)</p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
